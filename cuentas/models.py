@@ -14,4 +14,4 @@ class Cuenta(models.Model):
     numero_de_cuenta= models.CharField(max_length=50)
     class Meta:
         verbose_name = "Cuenta" 
-        verbose_name_plural = ""  
+        verbose_name_plural = "Cuentas"  

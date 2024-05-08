@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -48,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'bancolombia.urls'
@@ -76,11 +79,15 @@ WSGI_APPLICATION = 'bancolombia.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'saespinosab',
-        'USER': 'ibmclouddb',
-        'PASSWORD': 'd2df2773de85ef1df39faf3a9f60ede4bc512b4fee18887c2b6f',
+        'NAME': 'ibmclouddb',
+        'USER': 'admin',
+        'PASSWORD':'ceefdaf113f2226a7a94eff050e8af9537eee9dafd2270c75a59' ,
         'HOST': 'b04fa70e-33f5-4118-b5b0-033a7529e5cc.bkvfv1ld0bj2bdbncbeg.databases.appdomain.cloud',
         'PORT': '30099',
+        'OPTIONS': {
+            'sslmode': 'verify-full',
+            'sslrootcert': os.environ.get('PGSSLROOTCERT') ,  
+        },
     }}
 
 # DATABASES = {
@@ -115,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 
