@@ -1,21 +1,24 @@
-from rest_framework import generics,permissions,views,status, viewsets
+from rest_framework import generics,viewsets,status
 from .models import * 
 from .serializers import * 
 from rest_framework.response import Response
-#from rest_framework.decorators import action
+from rest_framework.decorators import action
 
-
-class CuentaViewSet(viewsets.ModelViewSet):
+class CuentasViewSet(viewsets.ModelViewSet):
     queryset= Cuenta.objects.all()
-    serializer_class=CuentaSerializer
+    serializer_class=CuentasSerializer
     
-    def list(self, request, *args, **kwargs):
-        queryset = self.queryset 
-        serializer = self.get_serializer(queryset, many=True)
+class MovimientosViewSet(viewsets.ModelViewSet):
+    queryset = Movimiento.objects.all()
+    serializer_class = MovimientosSerializer
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.create(serializer.validated_data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    @action(detail=True, methods=['get'])
+    def lista_movimientos_por_cuenta(self, request, pk):
+        movimientos = Movimiento.objects.filter(cuenta=pk)
+        serializer = self.get_serializer(movimientos, many=True)
         return Response(serializer.data)
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-

@@ -1,17 +1,29 @@
 from django.db import models
-
-class Movimiento(models.Model):
-    question_text = models.CharField(max_length=200)
-    fecha= models.DateTimeField(auto_now_add=True)
-    class Meta:
-        verbose_name = "Movimiento" 
-        verbose_name_plural = "Movimientos"  
-
+from .validators import validate_number
+from .mixins import ImmutableModelMixin;  
 class Cuenta(models.Model):
+    TIPOS_CUENTA= (
+        ('ahorro', 'Ahorro'),
+        ('corriente', 'Corriente'),
+        ('nomina', 'Nomina'),
+    )
     titular= models.CharField(max_length=50)
-    balance = models.DecimalField(max_digits=15, decimal_places=4) 
-    movimiento= models.ForeignKey(Movimiento, on_delete=models.CASCADE)
-    numero_de_cuenta= models.CharField(max_length=50)
+    saldo = models.DecimalField(max_digits=15, decimal_places=4) 
+    numero_de_cuenta= models.CharField(max_length=10,primary_key=True,validators=[validate_number])
+    tipo= models.CharField(max_length=12,choices=TIPOS_CUENTA)
     class Meta:
         verbose_name = "Cuenta" 
         verbose_name_plural = "Cuentas"  
+
+class Movimiento(ImmutableModelMixin,models.Model):
+    TIPOS_MOVIMIENTO= (
+        ('consignacion', 'Consignacion'),
+        ('retiro', 'Retiro'),
+    )
+    fecha= models.DateTimeField(auto_now_add=True)
+    monto= models.DecimalField(max_digits=15, decimal_places=4) 
+    tipo= models.CharField(max_length=12,choices=TIPOS_MOVIMIENTO)
+    cuenta = models.ForeignKey(Cuenta, related_name='movimientos', on_delete=models.CASCADE)   
+    class Meta:
+        verbose_name = "Movimiento" 
+        verbose_name_plural = "Movimientos"  
