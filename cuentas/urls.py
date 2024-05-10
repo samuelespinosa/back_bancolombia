@@ -11,5 +11,7 @@ router.register(r'movimientos', MovimientosViewSet)
 # Additionally, we include the views that don't require ViewSets manually.
 
 urlpatterns = [
-    path(r'api/',include(router.urls))
+    path(r'api/',include(router.urls)),
+    path('api/movimientos/<int:pk>/lista_movimientos/', MovimientosViewSet.as_view({'get': 'lista_movimientos'})),
+    path('api/movimientos/<int:pk>/obtner_pdf/', MovimientosViewSet.as_view({'get': 'obtner_pdf'})),
 ]

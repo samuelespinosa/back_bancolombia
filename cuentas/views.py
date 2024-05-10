@@ -1,8 +1,10 @@
-from rest_framework import generics,viewsets,status
+from rest_framework import generics,viewsets,status,views
 from .models import * 
 from .serializers import * 
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from .utils import generate_pdf
+from django.http import FileResponse
 
 class CuentasViewSet(viewsets.ModelViewSet):
     queryset= Cuenta.objects.all()
@@ -18,7 +20,15 @@ class MovimientosViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     @action(detail=True, methods=['get'])
-    def lista_movimientos_por_cuenta(self, request, pk):
+    def lista_movimientos(self, request, pk=None):
         movimientos = Movimiento.objects.filter(cuenta=pk)
         serializer = self.get_serializer(movimientos, many=True)
         return Response(serializer.data)
+
+    @action(detail=True, methods=['get'])
+    def obtener_pdf(self, request,pk=None):
+        movimientos = Movimiento.objects.filter(cuenta=pk)
+        pdf_bytes = generate_pdf(movimientos)
+        response = FileResponse(pdf_bytes, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="extractos.pdf"'
+        return response

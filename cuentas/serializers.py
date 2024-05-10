@@ -7,6 +7,8 @@ class CuentasSerializer(serializers.ModelSerializer):
         fields='__all__'
 
 class MovimientosSerializer(serializers.ModelSerializer):
+    cuenta = serializers.PrimaryKeyRelatedField(queryset=Cuenta.objects.all())
+    
     def create(self, validated_data):
         cuenta = validated_data['cuenta']
         monto = validated_data['monto']
@@ -28,3 +30,4 @@ class MovimientosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movimiento 
         fields = '__all__'
+

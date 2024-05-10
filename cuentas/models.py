@@ -20,6 +20,8 @@ class Movimiento(ImmutableModelMixin,models.Model):
         ('consignacion', 'Consignacion'),
         ('retiro', 'Retiro'),
     )
+    
+    descripcion = models.CharField(max_length=30,null=True,blank=True)
     fecha= models.DateTimeField(auto_now_add=True)
     monto= models.DecimalField(max_digits=15, decimal_places=4) 
     tipo= models.CharField(max_length=12,choices=TIPOS_MOVIMIENTO)
