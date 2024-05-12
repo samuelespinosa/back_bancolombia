@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-y0-60^st-og^=$hv8m65tt2a8ih&2h&l(6g=0-aw$j5jq4ax%7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ["localhost",'0.0.0.0']
 
 # Application definition
 
@@ -55,6 +54,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'bancolombia.urls'
 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8080',
+]
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

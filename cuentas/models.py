@@ -21,11 +21,12 @@ class Movimiento(ImmutableModelMixin,models.Model):
         ('retiro', 'Retiro'),
     )
     
-    descripcion = models.CharField(max_length=30,null=True,blank=True)
+    descripcion = models.CharField(max_length=30)
     fecha= models.DateTimeField(auto_now_add=True)
     monto= models.DecimalField(max_digits=15, decimal_places=4) 
     tipo= models.CharField(max_length=12,choices=TIPOS_MOVIMIENTO)
     cuenta = models.ForeignKey(Cuenta, related_name='movimientos', on_delete=models.CASCADE)   
+    saldo_calculado = models.DecimalField(max_digits=15, decimal_places=4,null=True) 
     class Meta:
         verbose_name = "Movimiento" 
         verbose_name_plural = "Movimientos"  
