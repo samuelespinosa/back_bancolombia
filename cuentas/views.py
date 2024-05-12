@@ -3,8 +3,17 @@ from .models import *
 from .serializers import * 
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from .utils import generate_pdf
+from .utils import generate_pdf,generate_base_64
 from django.http import FileResponse
+from django.template import loader
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+def pdf(request):
+
+    movimientos = Movimiento.objects.filter(cuenta='5973518656').order_by('-fecha')
+    template = loader.get_template("pdf_template.html")
+    context = {'movimientos': movimientos,'logo':generate_base_64('header.png')}
+    return HttpResponse(template.render(context, request))
 
 class CuentasViewSet(viewsets.ModelViewSet):
     queryset= Cuenta.objects.all()
@@ -27,8 +36,8 @@ class MovimientosViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def obtener_pdf(self, request,pk=None):
-        movimientos = Movimiento.objects.filter(cuenta=pk)
-        pdf_bytes = generate_pdf(movimientos)
-        response = FileResponse(pdf_bytes, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="extractos.pdf"'
-        return response
+        cuenta_obj = get_object_or_404(Cuenta, pk=pk)
+        movimientos = Movimiento.objects.filter(cuenta=pk).order_by('-fecha')
+        serializer = self.get_serializer(movimientos, many=True)
+        pdf_response = generate_pdf(serializer.data,cuenta_obj)
+        return pdf_response
