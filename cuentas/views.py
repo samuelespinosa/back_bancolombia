@@ -8,8 +8,8 @@ from django.http import FileResponse
 from django.template import loader
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-def pdf(request):
 
+def pdf(request):
     movimientos = Movimiento.objects.filter(cuenta='5973518656').order_by('-fecha')
     template = loader.get_template("pdf_template.html")
     context = {'movimientos': movimientos,'logo':generate_base_64('header.png')}

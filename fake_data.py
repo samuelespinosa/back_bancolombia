@@ -37,6 +37,7 @@ def nuevo_movimiento(cuenta):
             tipo_movimiento='consignacion'
     else:saldo_calculado=cuenta.saldo+monto
     cuenta.saldo=saldo_calculado
+    Cuenta.objects.filter(numero_de_cuenta=cuenta.numero_de_cuenta).update(saldo=saldo_calculado)
     fecha = fake.date_time_this_year()
     description = fake.paragraph(nb_sentences=1, variable_nb_sentences=True)
     while len(description) > 30:

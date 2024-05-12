@@ -29,5 +29,4 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/movimientos/<int:pk>/lista_movimientos/', MovimientosViewSet.as_view({'get': 'lista_movimientos'})),
     path('api/movimientos/<int:pk>/obtener_pdf/', MovimientosViewSet.as_view({'get': 'obtener_pdf'})),
-    path('pdf/', views.pdf, name="pdf"),  # Add this line to map the pdf view
 ]
